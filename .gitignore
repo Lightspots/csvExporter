@@ -1,0 +1,12 @@
+.gradle
+.settings
+bin
+build
+
+*.swp
+.classpath
+.project
+
+.idea
+out
+*.iml
