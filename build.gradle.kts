@@ -1,4 +1,6 @@
 import org.gradle.api.tasks.bundling.Jar
+import org.gradle.kotlin.dsl.version
+import org.jetbrains.dokka.gradle.DokkaTask
 import java.util.Date
 
 val kotlinVersion = "1.1.51"
@@ -6,6 +8,7 @@ val kotlinVersion = "1.1.51"
 plugins {
   kotlin("jvm", "1.1.51")
   id("com.jfrog.bintray") version ("1.7.3")
+  id("org.jetbrains.dokka") version ("0.9.15")
   maven
   `maven-publish`
 }
@@ -21,6 +24,11 @@ dependencies {
   compile(kotlin("stdlib-jre8", kotlinVersion))
   compile(kotlin("reflect", kotlinVersion))
   testCompile(kotlin("test-junit", kotlinVersion))
+}
+
+tasks.withType<DokkaTask> {
+  outputFormat = "html"
+  outputDirectory = "${project.buildDir}/javaDoc"
 }
 
 bintray {
@@ -44,12 +52,19 @@ val sourcesJar by tasks.creating(Jar::class) {
   from(java.sourceSets["main"].allSource)
 }
 
+val dokkaJar by tasks.creating(Jar::class) {
+  classifier = "javadoc"
+  from("${project.buildDir}/javaDoc")
+  dependsOn("dokka")
+}
+
 publishing {
   publications {
     (publications) {
       "Bintray"(MavenPublication::class) {
         from(components["java"])
         artifact(sourcesJar)
+        artifact(dokkaJar)
       }
     }
   }
