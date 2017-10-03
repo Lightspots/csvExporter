@@ -5,10 +5,23 @@ import java.util.Date
 
 val kotlinVersion = "1.1.51"
 
+buildscript {
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.15")
+  }
+}
+
+apply {
+  plugin("org.jetbrains.dokka")
+}
+
 plugins {
   kotlin("jvm", "1.1.51")
   id("com.jfrog.bintray") version ("1.7.3")
-  id("org.jetbrains.dokka") version ("0.9.15")
   maven
   `maven-publish`
 }
