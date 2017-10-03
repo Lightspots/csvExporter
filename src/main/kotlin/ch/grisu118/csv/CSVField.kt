@@ -7,4 +7,4 @@ package ch.grisu118.csv
  */
 @Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY_GETTER)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class CSVField(val header: String, val order: Int = 0, val prefix: String = "")
+annotation class CSVField(val header: String = "", val order: Int = 0, val prefix: String = "")

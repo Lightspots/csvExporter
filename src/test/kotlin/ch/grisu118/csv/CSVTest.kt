@@ -28,6 +28,14 @@ class CSVTest {
       equalTo(listOf("\"pOKode\",\"pOCombined\",\"tOid\",\"tOprop\",\"tOstring\",",
         "\"123\",\"CH-123\",\"321\",\"Hello World\",\"Hello World\",")))
   }
+
+  @Test
+  fun testOptionalHeader() {
+    class OptionalObj(@CSVField private val loremIpsum: String)
+
+    assertThat(listOf(OptionalObj("junitTest")).asCSV().toString().lines(),
+      equalTo(listOf("\"loremIpsum\",", "\"junitTest\",")))
+  }
 }
 
 class PrivateObject(@CSVField("Kode") private val code: String, private val prefix: String) {
