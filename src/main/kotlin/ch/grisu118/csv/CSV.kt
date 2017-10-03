@@ -20,6 +20,7 @@ class CSV internal constructor(private val csvData: TreeNode, private val lineCo
      * @param source the source for the csv generation.
      * @return the generated csv object.
      */
+    @JvmStatic
     fun generate(source: Collection<Any>): CSV {
       val root = TreeNode("", prefix = "")
       source.forEachIndexed { index, obj ->
