@@ -14,9 +14,9 @@ public class CSVJavaTest {
 
   @Test
   public void testWithPOJO() {
-    CSV csv = CSV.generate(Collections.singleton(new POJO("TestName", false)));
+    CSV csv = CSV.generate(Collections.singleton(new POJO("TestName", false, 42)));
     List<String> lines = Arrays.stream(csv.toString().split(System.lineSeparator())).collect(Collectors.toList());
-    assertThat(lines, equalTo(Arrays.asList("\"Name\",\"Active\",", "\"TestName\",\"false\",")));
+    assertThat(lines, equalTo(Arrays.asList("\"Name\",\"Active\",\"number\",", "\"TestName\",\"false\",\"42\",")));
   }
 
   static class POJO {
@@ -27,9 +27,13 @@ public class CSVJavaTest {
     @CSVField(header = "Active")
     private final boolean active;
 
-    POJO(String name, boolean active) {
+    @CSVField
+    private final int number;
+
+    POJO(String name, boolean active, int number) {
       this.name = name;
       this.active = active;
+      this.number = number;
     }
 
   }
