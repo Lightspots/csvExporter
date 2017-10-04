@@ -39,13 +39,15 @@ class CSV internal constructor(private val csvData: TreeNode, private val lineCo
             if (!member.getter.isAccessible) {
               member.getter.isAccessible = true
             }
-            addValue(parent, a.header, a.order, a.prefix, member.getter.call(obj), index)
+            addValue(parent, if (a.header.isBlank()) member.name else a.header, a.order, a.prefix,
+              member.getter.call(obj), index)
           }
         } else {
           if (!member.getter.isAccessible) {
             member.getter.isAccessible = true
           }
-          addValue(parent, annotation.header, annotation.order, annotation.prefix, member.getter.call(obj), index)
+          addValue(parent, if (annotation.header.isBlank()) member.name else annotation.header, annotation.order,
+            annotation.prefix, member.getter.call(obj), index)
         }
       }
     }
