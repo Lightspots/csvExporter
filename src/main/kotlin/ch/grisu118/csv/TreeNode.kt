@@ -5,8 +5,10 @@ internal data class TreeNode(private val header: String, private val order: Int 
   internal val values = mutableListOf<String>()
   internal val children = mutableMapOf<String, TreeNode>()
   private val isLeaf get() = children.isEmpty()
+  private var separator: String = CSVKonfig.SEPARATOR.value
 
   fun asCSV(lines: Int): String {
+    separator = CSVKonfig.SEPARATOR.value
     val builder = StringBuilder()
     for (child in children.values.sortedBy { it.order }) {
       child.csvHeader(builder, prefix)
@@ -22,7 +24,7 @@ internal data class TreeNode(private val header: String, private val order: Int 
 
   private fun csvHeader(builder: StringBuilder, combinedPrefix: String) {
     if (isLeaf) {
-      builder.append("\"$combinedPrefix$header\"${SEPARATOR}")
+      builder.append("\"$combinedPrefix$header\"$separator")
     } else {
       for (child in children.values.sortedBy { it.order }) {
         child.csvHeader(builder, "$combinedPrefix$prefix")
@@ -33,9 +35,9 @@ internal data class TreeNode(private val header: String, private val order: Int 
   private fun csvValue(builder: StringBuilder, index: Int) {
     if (isLeaf) {
       if (values.size > index) {
-        builder.append("\"${values[index]}\"${SEPARATOR}")
+        builder.append("\"${values[index]}\"$separator")
       } else {
-        builder.append("\"\"${SEPARATOR}")
+        builder.append("\"\"$separator")
       }
     } else {
       for (child in children.values.sortedBy { it.order }) {
@@ -68,9 +70,5 @@ internal data class TreeNode(private val header: String, private val order: Int 
 
   override fun toString(): String {
     return "TreeNode(header='$header', order=$order, values=$values, children=$children)"
-  }
-
-  companion object {
-    val SEPARATOR = ","
   }
 }
