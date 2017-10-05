@@ -33,15 +33,36 @@ internal object Generator {
   private fun addValue(parent: TreeNode, header: String, order: Int, prefix: String, value: Any?, index: Int) {
     if (value != null) {
       val data = parent.children.computeIfAbsent(header, { TreeNode(it, order, prefix) })
-      if (value.isPrimitive()) {
-        if (data.values.size < index) {
-          for (i in 0 until index) {
-            data.values.add(i, "")
-          }
+      when {
+        CSVKonfig.CONVERTER.contains(value::class) -> {
+          fillList(data, index)
+          data.values.add(index, CSVKonfig.CONVERTER[value::class]!!.invoke(value))
         }
-        data.values.add(index, value.toString())
-      } else {
-        generateWithReflection(data, value, index)
+        value.isPrimitive() -> {
+          fillList(data, index)
+          data.values.add(index, value.toString())
+        }
+        value is Array<*>
+          || value is IntArray
+          || value is ShortArray
+          || value is ByteArray
+          || value is CharArray
+          || value is LongArray
+          || value is FloatArray
+          || value is DoubleArray
+          || value is BooleanArray
+          || value is Collection<*> -> {
+          data.values.add(index, value.toString())
+        }
+        else -> generateWithReflection(data, value, index)
+      }
+    }
+  }
+
+  private fun fillList(data: TreeNode, index: Int) {
+    if (data.values.size < index) {
+      for (i in 0 until index) {
+        data.values.add(i, "")
       }
     }
   }

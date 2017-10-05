@@ -23,12 +23,6 @@ class CSV internal constructor(private val csvData: TreeNode, private val lineCo
       }
       return CSV(root, source.size)
     }
-
-  }
-
-  object Config {
-    var SEPARATOR: Separator = Separator.COMMA
-
   }
 
 }

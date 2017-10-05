@@ -1,6 +1,6 @@
 package ch.grisu118.csv
 
-class CSVBuilder(private val separator: Separator) {
+class CSVBuilder(private val separator: Separator = Separator.COMMA) {
 
   private val lines = mutableListOf<String>()
 
