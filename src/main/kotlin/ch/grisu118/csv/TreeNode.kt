@@ -1,11 +1,22 @@
 package ch.grisu118.csv
 
-internal data class TreeNode(private val header: String, private val order: Int = 0, internal val prefix: String) {
+internal class TreeNode(header: String, private val order: Int = 0, prefix: String) {
 
-  internal val values = mutableListOf<String>()
   internal val children = mutableMapOf<String, TreeNode>()
+  private val values = mutableListOf<String>()
   private val isLeaf get() = children.isEmpty()
   private var separator: String = CSVKonfig.SEPARATOR.value
+  private val header: String = header.replace("\"", "\"\"")
+  private val prefix: String = prefix.replace("\"", "\"\"")
+
+  fun addValue(index: Int, value: String) {
+    if (values.size < index) {
+      for (i in 0 until index) {
+        values.add(i, "")
+      }
+    }
+    values.add(index, value.replace("\"", "\"\""))
+  }
 
   fun asCSV(lines: Int): String {
     separator = CSVKonfig.SEPARATOR.value
