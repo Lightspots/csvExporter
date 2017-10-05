@@ -99,6 +99,18 @@ class CSVTest {
       ))
   }
 
+  @Test
+  fun testQuotationEscape() {
+    class SimpleObj(@CSVField(header = "Field With \"") private val someString: String)
+
+    assertThat(listOf(SimpleObj("Hello\" dude\"\" :)")).asCSV().toString(),
+      equalTo(CSVBuilder(Separator.COMMA)
+        .newLine("Field With \"\"")
+        .newLine("Hello\"\" dude\"\"\"\" :)")
+        .build()
+      ))
+  }
+
   class PrivateObject(@CSVField("Kode") private val code: String, private val prefix: String) {
     private val combined
       @CSVField(header = "Combined")

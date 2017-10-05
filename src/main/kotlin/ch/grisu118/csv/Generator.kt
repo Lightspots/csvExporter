@@ -35,12 +35,10 @@ internal object Generator {
       val data = parent.children.computeIfAbsent(header, { TreeNode(it, order, prefix) })
       when {
         CSVKonfig.CONVERTER.contains(value::class) -> {
-          fillList(data, index)
-          data.values.add(index, CSVKonfig.CONVERTER[value::class]!!.invoke(value))
+          data.addValue(index, CSVKonfig.CONVERTER[value::class]!!.invoke(value))
         }
         value.isPrimitive() -> {
-          fillList(data, index)
-          data.values.add(index, value.toString())
+          data.addValue(index, value.toString())
         }
         value is Array<*>
           || value is IntArray
@@ -52,17 +50,9 @@ internal object Generator {
           || value is DoubleArray
           || value is BooleanArray
           || value is Collection<*> -> {
-          data.values.add(index, value.toString())
+          data.addValue(index, value.toString())
         }
         else -> generateWithReflection(data, value, index)
-      }
-    }
-  }
-
-  private fun fillList(data: TreeNode, index: Int) {
-    if (data.values.size < index) {
-      for (i in 0 until index) {
-        data.values.add(i, "")
       }
     }
   }
