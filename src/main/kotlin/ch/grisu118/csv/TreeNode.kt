@@ -7,7 +7,7 @@ internal data class TreeNode(private val header: String, private val order: Int 
   private val isLeaf get() = children.isEmpty()
 
   fun asCSV(lines: Int): String {
-    SEPARATOR = CSV.Config.SEPERATOR.value
+    SEPARATOR = CSV.Config.SEPARATOR.value
     val builder = StringBuilder()
     for (child in children.values.sortedBy { it.order }) {
       child.csvHeader(builder, prefix)
@@ -72,6 +72,6 @@ internal data class TreeNode(private val header: String, private val order: Int 
   }
 
   companion object {
-    private var SEPARATOR = Seperator.COMMA.value
+    private var SEPARATOR = Separator.COMMA.value
   }
 }

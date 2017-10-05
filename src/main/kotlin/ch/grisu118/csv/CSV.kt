@@ -27,7 +27,7 @@ class CSV internal constructor(private val csvData: TreeNode, private val lineCo
   }
 
   object Config {
-    var SEPERATOR: Seperator = Seperator.COMMA
+    var SEPARATOR: Separator = Separator.COMMA
 
   }
 

@@ -8,33 +8,45 @@ class CSVTest {
 
   @Test
   fun testSimple() {
-    assertThat(CSV.generate(listOf(TestObject(2L))).toString().lines(),
-      equalTo(listOf("\"id\",\"prop\",\"string\",",
-        "\"2\",\"Hello World\",\"Hello World\",")))
+    assertThat(CSV.generate(listOf(TestObject(2L))).toString(),
+      equalTo(CSVBuilder(Separator.COMMA)
+        .newLine("id", "prop", "string")
+        .newLine("2", "Hello World", "Hello World")
+        .build()
+      ))
   }
 
   @Test
   fun testPrivateFieldAndPropterty() {
-    assertThat(listOf(PrivateObject("123541", "HH")).asCSV().toString().lines(),
-      equalTo(listOf(
-        "\"Kode\",\"Combined\",",
-        "\"123541\",\"HH-123541\",")))
+    assertThat(listOf(PrivateObject("123541", "HH")).asCSV().toString(),
+      equalTo(CSVBuilder(Separator.COMMA)
+        .newLine("Kode", "Combined")
+        .newLine("123541", "HH-123541")
+        .build()
+      ))
   }
 
   @Test
   fun testPrefix() {
     val obj = ObjectWithChilds(PrivateObject("123", "CH"), TestObject(321L))
-    assertThat(listOf(obj).asCSV().toString().lines(),
-      equalTo(listOf("\"pOKode\",\"pOCombined\",\"tOid\",\"tOprop\",\"tOstring\",",
-        "\"123\",\"CH-123\",\"321\",\"Hello World\",\"Hello World\",")))
+    assertThat(listOf(obj).asCSV().toString(),
+      equalTo(CSVBuilder(Separator.COMMA)
+        .newLine("pOKode", "pOCombined", "tOid", "tOprop", "tOstring")
+        .newLine("123", "CH-123", "321", "Hello World", "Hello World")
+        .build()
+      ))
   }
 
   @Test
   fun testOptionalHeader() {
     class OptionalObj(@CSVField private val loremIpsum: String)
 
-    assertThat(listOf(OptionalObj("junitTest")).asCSV().toString().lines(),
-      equalTo(listOf("\"loremIpsum\",", "\"junitTest\",")))
+    assertThat(listOf(OptionalObj("junitTest")).asCSV().toString(),
+      equalTo(CSVBuilder(Separator.COMMA)
+        .newLine("loremIpsum")
+        .newLine("junitTest")
+        .build()
+      ))
   }
 }
 

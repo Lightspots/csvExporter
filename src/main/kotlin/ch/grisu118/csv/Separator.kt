@@ -1,6 +1,6 @@
 package ch.grisu118.csv
 
-enum class Seperator(val value: String) {
+enum class Separator(val value: String) {
   TAB("\t"),
   COMMA(","),
   SEMICOLON(";"),
