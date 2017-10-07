@@ -16,7 +16,7 @@ repositories {
  }
  
 dependencies {
-    compile 'ch.grisu118:csvExporter:0.5.0'
+    compile 'ch.grisu118:csvExporter:1.0.0'
 }
 ````
 
@@ -74,3 +74,21 @@ class POJO {
 System.out.println(CSV.generate(Collection.singleton(new POJO("ReadmeSample", true, 42))))
 ````
 
+## Configuration
+
+You can configure the separator to use. This is done on the `CSVKonfig` object.
+
+````kotlin
+CSVKonfig.SEPARATOR = Separator.SEMICOLON
+````
+
+Also you can set additional converter function to retrieve value of an object.
+
+So, instead of having boolean written as `true` and `false`,
+you can convert them to `yes` / `no` or something else
+
+````kotlin
+CSVKonfig.CONVERTER[Boolean::class] = {
+  if (it as Boolean) "Yes" else "No"
+}
+````

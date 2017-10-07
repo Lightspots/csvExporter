@@ -27,7 +27,7 @@ plugins {
 }
 
 group = "ch.grisu118"
-version = "0.7.1"
+version = "1.0.0"
 
 repositories {
   mavenCentral()
