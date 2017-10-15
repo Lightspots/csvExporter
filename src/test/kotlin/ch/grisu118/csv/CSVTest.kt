@@ -111,6 +111,18 @@ class CSVTest {
       ))
   }
 
+  @Test
+  fun testEnum() {
+    class SimpleObj(@CSVField private val enum: TestEnum)
+
+    assertThat(listOf(SimpleObj(TestEnum.VALUE)).asCSV().toString(),
+      equalTo(CSVBuilder(Separator.COMMA)
+        .newLine("enum")
+        .newLine("VALUE")
+        .build()
+      ))
+  }
+
   class PrivateObject(@CSVField("Kode") private val code: String, private val prefix: String) {
     private val combined
       @CSVField(header = "Combined")
@@ -129,6 +141,11 @@ class CSVTest {
 
   class ObjectWithChilds(@CSVField("pObject", prefix = "pO") val privateObject: PrivateObject, @CSVField("testObj",
     prefix = "tO") val testObject: TestObject)
+
+  enum class TestEnum {
+    VALUE,
+    KEY
+  }
 }
 
 
