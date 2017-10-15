@@ -24,10 +24,11 @@ plugins {
   id("com.jfrog.bintray") version ("1.7.3")
   maven
   `maven-publish`
+  jacoco
 }
 
 group = "ch.grisu118"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
   mavenCentral()
@@ -58,6 +59,15 @@ bintray {
   pkg.version.desc = ""
   pkg.version.released = Date().toString()
   pkg.version.vcsTag = project.version.toString()
+}
+
+tasks {
+  "jacocoTestReport"(JacocoReport::class) {
+    reports {
+      xml.isEnabled = true
+      html.isEnabled = true
+    }
+  }
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

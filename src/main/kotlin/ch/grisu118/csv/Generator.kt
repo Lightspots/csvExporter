@@ -52,6 +52,7 @@ internal object Generator {
           || value is Collection<*> -> {
           data.addValue(index, value.toString())
         }
+        value is Enum<*> -> data.addValue(index, value.toString())
         else -> generateWithReflection(data, value, index)
       }
     }
