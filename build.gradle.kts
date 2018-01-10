@@ -3,7 +3,7 @@ import org.gradle.kotlin.dsl.version
 import org.jetbrains.dokka.gradle.DokkaTask
 import java.util.Date
 
-val kotlinVersion = "1.1.51"
+val kotlinVersion = "1.2.10"
 
 buildscript {
   repositories {
@@ -20,7 +20,7 @@ apply {
 }
 
 plugins {
-  kotlin("jvm", "1.1.51")
+  kotlin("jvm", "1.2.10")
   id("com.jfrog.bintray") version ("1.7.3")
   maven
   `maven-publish`
