@@ -11,7 +11,7 @@ internal class TreeNode(header: String, private val order: Int = 0, prefix: Stri
 
   fun addValue(index: Int, value: String) {
     if (values.size < index) {
-      for (i in 0 until index) {
+      for (i in values.size until index) {
         values.add(i, "")
       }
     }

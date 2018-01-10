@@ -123,6 +123,42 @@ class CSVTest {
       ))
   }
 
+  @Test
+  fun testEmptyRowsAnyWhere() {
+    data class Obj(@CSVField private val field: Int?)
+    assertThat(listOf(
+      Obj(1),
+      Obj(2),
+      Obj(null),
+      Obj(4)
+    ).asCSV().toString(),
+      equalTo(CSVBuilder(Separator.COMMA)
+        .newLine("field")
+        .newLine("1")
+        .newLine("2")
+        .newLine("")
+        .newLine("4")
+        .build()))
+  }
+
+  @Test
+  fun testStartWithEmptyRows() {
+    data class Obj(@CSVField private val field: Int?)
+    assertThat(listOf(
+      Obj(null),
+      Obj(null),
+      Obj(1),
+      Obj(2)
+    ).asCSV().toString(),
+      equalTo(CSVBuilder(Separator.COMMA)
+        .newLine("field")
+        .newLine("")
+        .newLine("")
+        .newLine("1")
+        .newLine("2")
+        .build()))
+  }
+
   class PrivateObject(@CSVField("Kode") private val code: String, private val prefix: String) {
     private val combined
       @CSVField(header = "Combined")
