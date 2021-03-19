@@ -39,6 +39,12 @@ tasks.javadoc.configure {
   setDestinationDir(File(buildDir, "dokka/html"))
 }
 
+tasks.assemble.configure {
+  doLast {
+    logger.lifecycle("::set-output name=version::$version")
+  }
+}
+
 publishing {
   repositories {
     maven {
