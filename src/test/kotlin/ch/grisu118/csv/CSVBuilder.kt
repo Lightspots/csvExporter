@@ -9,6 +9,6 @@ class CSVBuilder(private val separator: Separator = Separator.COMMA) {
     return this
   }
 
-  fun build() = lines.joinToString(separator = System.lineSeparator())
+  fun build() = lines.joinToString(separator = "\n")
 
 }

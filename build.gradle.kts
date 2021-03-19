@@ -1,44 +1,23 @@
-import org.gradle.api.tasks.bundling.Jar
-import org.gradle.kotlin.dsl.version
-import org.jetbrains.dokka.gradle.DokkaTask
-
-buildscript {
-  repositories {
-    jcenter()
-  }
-
-  dependencies {
-    classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.17")
-  }
-}
-
-apply {
-  plugin("org.jetbrains.dokka")
-}
-
 plugins {
-  kotlin("jvm") version ("1.2.71")
+  kotlin("jvm") version ("1.4.30")
+  id("org.jetbrains.dokka") version "1.4.30"
   maven
   `maven-publish`
   jacoco
 }
 
 group = "ch.grisu118"
-version = "1.0.3"
+version = "1.1.0"
 
 repositories {
   mavenCentral()
+  jcenter()
 }
 
 dependencies {
-  compile(kotlin("stdlib-jdk8"))
-  compile(kotlin("reflect"))
-  testCompile(kotlin("test-junit"))
-}
-
-tasks.withType<DokkaTask> {
-  outputFormat = "html"
-  outputDirectory = "${project.buildDir}/javaDoc"
+  implementation(kotlin("stdlib-jdk8"))
+  implementation(kotlin("reflect"))
+  testImplementation(kotlin("test-junit"))
 }
 
 tasks {
@@ -50,15 +29,14 @@ tasks {
   }
 }
 
-val sourcesJar by tasks.creating(Jar::class) {
-  classifier = "sources"
-  from(java.sourceSets["main"].allSource)
+java {
+  withJavadocJar()
+  withSourcesJar()
 }
 
-val dokkaJar by tasks.creating(Jar::class) {
-  classifier = "javadoc"
-  from("${project.buildDir}/javaDoc")
-  dependsOn("dokka")
+tasks.javadoc.configure {
+  dependsOn("dokkaHtml")
+  setDestinationDir(File(buildDir, "dokka/html"))
 }
 
 publishing {
@@ -73,12 +51,8 @@ publishing {
     }
   }
   publications {
-    (publications) {
-      "gpr"(MavenPublication::class) {
-        from(components["java"])
-        artifact(sourcesJar)
-        artifact(dokkaJar)
-      }
+    create<MavenPublication>("gpr") {
+      from(components["java"])
     }
   }
 }
