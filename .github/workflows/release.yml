@@ -1,0 +1,33 @@
+# GitHub Actions Workflow created for handling the release process based on the draft release prepared
+# with the Build workflow.
+
+name: Release
+on:
+  release:
+    types: [ prereleased, released ]
+
+jobs:
+
+  # Prepare and publish the plugin to the Marketplace repository
+  release:
+    name: Publish Artifact
+    runs-on: ubuntu-latest
+    steps:
+
+      # Setup Java 1.8 environment for the next steps
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      # Check out current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      # Publish the plugin to the Marketplace
+      - name: Publish Plugin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publish
