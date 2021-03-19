@@ -1,7 +1,6 @@
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.version
 import org.jetbrains.dokka.gradle.DokkaTask
-import java.util.Date
 
 buildscript {
   repositories {
@@ -19,7 +18,6 @@ apply {
 
 plugins {
   kotlin("jvm") version ("1.2.71")
-  id("com.jfrog.bintray") version ("1.8.4")
   maven
   `maven-publish`
   jacoco
@@ -43,22 +41,6 @@ tasks.withType<DokkaTask> {
   outputDirectory = "${project.buildDir}/javaDoc"
 }
 
-bintray {
-  user = if (project.hasProperty("bintrayUser")) project.property("bintrayUser").toString() else ""
-  key = if (project.hasProperty("bintrayApiKey")) project.property("bintrayApiKey").toString() else ""
-  setPublications("Bintray")
-  pkg = PackageConfig()
-  pkg.repo = "kotlin"
-  pkg.name = "csvExporter"
-  pkg.setLicenses("MIT")
-  pkg.vcsUrl = "https://github.com/Grisu118/csvExporter.git"
-  pkg.version = VersionConfig()
-  pkg.version.name = project.version.toString()
-  pkg.version.desc = ""
-  pkg.version.released = Date().toString()
-  pkg.version.vcsTag = project.version.toString()
-}
-
 tasks {
   "jacocoTestReport"(JacocoReport::class) {
     reports {
@@ -80,9 +62,19 @@ val dokkaJar by tasks.creating(Jar::class) {
 }
 
 publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/lightspots/csvexporter")
+      credentials {
+        username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+      }
+    }
+  }
   publications {
     (publications) {
-      "Bintray"(MavenPublication::class) {
+      "gpr"(MavenPublication::class) {
         from(components["java"])
         artifact(sourcesJar)
         artifact(dokkaJar)
