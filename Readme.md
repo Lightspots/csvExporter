@@ -1,27 +1,33 @@
 # CSV Exporter
 
-[![Build Status](https://travis-ci.org/Grisu118/csvExporter.svg?branch=master)](https://travis-ci.org/Grisu118/csvExporter)
-[ ![Download](https://api.bintray.com/packages/grisu118/kotlin/csvExporter/images/download.svg) ](https://bintray.com/grisu118/kotlin/csvExporter/_latestVersion)
+[![Build Status](https://github.com/Lightspots/csvExporter/actions/workflows/build.yml/badge.svg)](https://github.com/Lightspots/csvExporter/actions/workflows/build.yml)
+[ ![Download](https://img.shields.io/github/v/release/Lightspots/csvExporter)](https://github.com/Lightspots/csvExporter/packages/681691)
 
 CSV Exporter is a small library using reflection to generate a csv from kotlin or java objects.
 
 ## Getting started
 
-Add the bintray repository and the dependency to your build script
-````groovy
-repositories { 
-    maven { 
-        url "https://dl.bintray.com/grisu118/kotlin" 
-     } 
- }
+Add the github repository and the dependency to your build script
+
+````kotlin
+repositories {
+  maven {
+    name = "GitHubPackages"
+    url = uri("https://maven.pkg.github.com/lightspots/csvexporter")
+    credentials {
+      username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+      password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+    }
+  }
+}
  
 dependencies {
-    compile 'ch.grisu118:csvExporter:1.0.0'
+  implementation("ch.grisu118:csvexporter:1.1.0")
 }
 ````
 
-To use an Kotlin or Java Object as source for the csv generation.
-The fields which should be end up in the csv need the `@CSVField` annotation.
+To use an Kotlin or Java Object as source for the csv generation. The fields which should be end up in the csv need
+the `@CSVField` annotation.
 
 On the annotation you can specify three optional parameters
 * header: String - The name used for the header, needs to be unique for an object. If empty the field name is used.
