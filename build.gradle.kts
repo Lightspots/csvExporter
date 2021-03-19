@@ -1,62 +1,23 @@
-import org.gradle.api.tasks.bundling.Jar
-import org.gradle.kotlin.dsl.version
-import org.jetbrains.dokka.gradle.DokkaTask
-import java.util.Date
-
-buildscript {
-  repositories {
-    jcenter()
-  }
-
-  dependencies {
-    classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.17")
-  }
-}
-
-apply {
-  plugin("org.jetbrains.dokka")
-}
-
 plugins {
-  kotlin("jvm") version ("1.2.71")
-  id("com.jfrog.bintray") version ("1.8.4")
+  kotlin("jvm") version ("1.4.30")
+  id("org.jetbrains.dokka") version "1.4.30"
   maven
   `maven-publish`
   jacoco
 }
 
 group = "ch.grisu118"
-version = "1.0.3"
+version = "1.1.0"
 
 repositories {
   mavenCentral()
+  jcenter()
 }
 
 dependencies {
-  compile(kotlin("stdlib-jdk8"))
-  compile(kotlin("reflect"))
-  testCompile(kotlin("test-junit"))
-}
-
-tasks.withType<DokkaTask> {
-  outputFormat = "html"
-  outputDirectory = "${project.buildDir}/javaDoc"
-}
-
-bintray {
-  user = if (project.hasProperty("bintrayUser")) project.property("bintrayUser").toString() else ""
-  key = if (project.hasProperty("bintrayApiKey")) project.property("bintrayApiKey").toString() else ""
-  setPublications("Bintray")
-  pkg = PackageConfig()
-  pkg.repo = "kotlin"
-  pkg.name = "csvExporter"
-  pkg.setLicenses("MIT")
-  pkg.vcsUrl = "https://github.com/Grisu118/csvExporter.git"
-  pkg.version = VersionConfig()
-  pkg.version.name = project.version.toString()
-  pkg.version.desc = ""
-  pkg.version.released = Date().toString()
-  pkg.version.vcsTag = project.version.toString()
+  implementation(kotlin("stdlib-jdk8"))
+  implementation(kotlin("reflect"))
+  testImplementation(kotlin("test-junit"))
 }
 
 tasks {
@@ -68,25 +29,36 @@ tasks {
   }
 }
 
-val sourcesJar by tasks.creating(Jar::class) {
-  classifier = "sources"
-  from(java.sourceSets["main"].allSource)
+java {
+  withJavadocJar()
+  withSourcesJar()
 }
 
-val dokkaJar by tasks.creating(Jar::class) {
-  classifier = "javadoc"
-  from("${project.buildDir}/javaDoc")
-  dependsOn("dokka")
+tasks.javadoc.configure {
+  dependsOn("dokkaHtml")
+  setDestinationDir(File(buildDir, "dokka/html"))
+}
+
+tasks.assemble.configure {
+  doLast {
+    logger.lifecycle("::set-output name=version::$version")
+  }
 }
 
 publishing {
-  publications {
-    (publications) {
-      "Bintray"(MavenPublication::class) {
-        from(components["java"])
-        artifact(sourcesJar)
-        artifact(dokkaJar)
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/lightspots/csvexporter")
+      credentials {
+        username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+        password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
       }
+    }
+  }
+  publications {
+    create<MavenPublication>("gpr") {
+      from(components["java"])
     }
   }
 }

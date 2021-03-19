@@ -25,7 +25,7 @@ internal class TreeNode(header: String, private val order: Int = 0, prefix: Stri
       child.csvHeader(builder, prefix)
     }
     for (i in 0 until lines) {
-      builder.appendln()
+      builder.appendLine()
       for (child in children.values.sortedBy { it.order }) {
         child.csvValue(builder, i)
       }
@@ -68,7 +68,7 @@ internal class TreeNode(header: String, private val order: Int = 0, prefix: Stri
   }
 
   private fun debugTree(builder: StringBuilder, prefix: String, isTail: Boolean) {
-    builder.appendln("$prefix${if (isTail) "└── " else "├── "}$header")
+    builder.appendLine("$prefix${if (isTail) "└── " else "├── "}$header")
     val values = children.values.sortedBy { it.order }
     for (child in values.take(Math.max(children.size - 1, 0))) {
       child.debugTree(builder, "$prefix${if (isTail) "    " else "│   "}", false)
